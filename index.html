@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CSV File Upload</title>
+	<style>
+		*{
+			font-family: Arial, Helvetica, sans-serif;
+		}
+
+		h1, p{
+			text-align: center;
+		}
+
+		table {
+			border-collapse: collapse;
+			width: 50%;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		th, td {
+			border: 1px solid #232121;
+			padding: 8px;
+		}
+
+		th {
+			text-align: left;
+		}
+
+		tr:nth-child(even) {
+			background-color: #fff;
+		}
+
+		.button-container {
+			text-align: center;
+		}
+		/* Style for the file upload button */
+		input[type="file"] {
+			padding: 5px;
+			border: none;
+			border-radius: 5px;
+			background-color: #f0f0f0;
+			box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+		}
+
+		/* Style for the upload button */
+		button {
+			padding: 5px 15px;
+			border: none;
+			border-radius: 5px;
+			background-color: #4CAF50;
+			color: #fff;
+			box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+			cursor: pointer;
+		}
+
+		/* Style for the table container */
+		#tableDiv {
+			margin-top: 30px;
+		}
+
+		/* Style for the table header */
+		table th {
+			background-color: #232121;
+			color: #fff;
+		}
+
+		/* Style for the even rows */
+		table tr:nth-child(even) {
+			background-color: #f2f2f2;
+		}
+
+		/* Style for the cells in the first column */
+		table td:first-child {
+			font-weight: bold;
+		}
+
+		/* Style for the cells in the second column */
+		table td:last-child {
+			font-style: italic;
+		}
+	</style>
+	
+</head>
+<body>
+	<h1>Table Viewer</h1>
+	<p class="button-container">
+		Hi! Please select a CSV file to upload:
+		<br><br>
+		<input type="file" id="fileInput">
+		<button onclick="processFile()">Upload</button>
+	</p>
+	<br><br><br>
+	<div id="tableDiv"></div>
+	<script>
+	function processFile() {
+	let fileInput = document.getElementById('fileInput');
+	let file = fileInput.files[0];
+	let reader = new FileReader();
+
+	reader.onload = function() {
+		let data = reader.result;
+		let table = document.createElement('table');
+		let rows = data.split('\n');
+		for (let i = 0; i < rows.length; i++) {
+		let row = rows[i].split(',');
+		if (i == 0) {
+			let headerRow = document.createElement('tr');
+			for (let j = 0; j < row.length; j++) {
+			let headerCell = document.createElement('th');
+			headerCell.textContent = row[j];
+			headerRow.appendChild(headerCell);
+			}
+			table.appendChild(headerRow);
+		} else {
+			let dataRow = document.createElement('tr');
+			for (let j = 0; j < row.length; j++) {
+			let dataCell = document.createElement('td');
+			dataCell.textContent = row[j];
+			// Add text-align style to cells based on their column index
+			if (j === 0) {
+				dataCell.style.textAlign = 'left';
+			} else {
+				dataCell.style.textAlign = 'right';
+			}
+			dataRow.appendChild(dataCell);
+			}
+			table.appendChild(dataRow);
+		}
+		}
+		let tableDiv = document.getElementById('tableDiv');
+		tableDiv.innerHTML = '';
+		tableDiv.appendChild(table);
+	};
+
+	reader.readAsText(file);
+	}
+
+	</script>
+
+	<br><br>
+    <table border="1" style="width: 50%; text-align: center;">
+		<tr>
+			<th style="text-align: center;">Category</th>
+			<th style="text-align: center;">Value</th>
+		</tr>
+		<tr>
+			<td>Alpha</td>
+			<td>A5 + A20</td>
+		</tr>
+		<tr>
+			<td>Beta</td>
+			<td>A15 / A7</td>
+		</tr>
+		<tr>
+			<td>Charlie</td>
+			<td>A13 * A12</td>
+		</tr>
+	</table>
+</body>
+</html>
