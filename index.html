@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>CSV File Upload</title>
-	<style>
+    <style>
 		*{
 			font-family: Arial, Helvetica, sans-serif;
 		}
@@ -80,7 +80,6 @@
 			font-style: italic;
 		}
 	</style>
-	
 </head>
 <body>
 	<h1>Table Viewer</h1>
@@ -94,68 +93,111 @@
 	<div id="tableDiv"></div>
 	<script>
 	function processFile() {
-	let fileInput = document.getElementById('fileInput');
-	let file = fileInput.files[0];
-	let reader = new FileReader();
+		let fileInput = document.getElementById('fileInput');
+		let file = fileInput.files[0];
+		let reader = new FileReader();
 
-	reader.onload = function() {
-		let data = reader.result;
-		let table = document.createElement('table');
-		let rows = data.split('\n');
-		for (let i = 0; i < rows.length; i++) {
-		let row = rows[i].split(',');
-		if (i == 0) {
-			let headerRow = document.createElement('tr');
-			for (let j = 0; j < row.length; j++) {
-			let headerCell = document.createElement('th');
-			headerCell.textContent = row[j];
-			headerRow.appendChild(headerCell);
+		reader.onload = function() {
+			let data = reader.result;
+			let table = document.createElement('table');
+			let rows = data.split('\n');
+			for (let i = 0; i < rows.length; i++) {
+				let row = rows[i].split(',');
+				if (i == 0) {
+					let headerRow = document.createElement('tr');
+					for (let j = 0; j < row.length; j++) {
+						let headerCell = document.createElement('th');
+						headerCell.textContent = row[j];
+						headerRow.appendChild(headerCell);
+					}
+					table.appendChild(headerRow);
+				} else {
+					let dataRow = document.createElement('tr');
+					for (let j = 0; j < row.length; j++) {
+						let dataCell = document.createElement('td');
+						dataCell.textContent = row[j];
+						// Add text-align style to cells based on their column index
+						if (j === 0) {
+							dataCell.style.textAlign = 'left';
+						} else {
+							dataCell.style.textAlign = 'right';
+						}
+						dataRow.appendChild(dataCell);
+					}
+					table.appendChild(dataRow);
+				}
 			}
-			table.appendChild(headerRow);
-		} else {
-			let dataRow = document.createElement('tr');
-			for (let j = 0; j < row.length; j++) {
-			let dataCell = document.createElement('td');
-			dataCell.textContent = row[j];
-			// Add text-align style to cells based on their column index
-			if (j === 0) {
-				dataCell.style.textAlign = 'left';
-			} else {
-				dataCell.style.textAlign = 'right';
-			}
-			dataRow.appendChild(dataCell);
-			}
-			table.appendChild(dataRow);
-		}
-		}
-		let tableDiv = document.getElementById('tableDiv');
-		tableDiv.innerHTML = '';
-		tableDiv.appendChild(table);
-	};
+			let tableDiv = document.getElementById('tableDiv');
+			tableDiv.innerHTML = '';
+			tableDiv.appendChild(table);
 
+			let a5Value, a20Value, a15Value, a7Value, a13Value, a12Value;
+			let rows2 = data.split('\n');
+			for (let i = 0; i < rows2.length; i++) {
+				const row = rows2[i];
+				const values = row.split(',');
+				switch (values[0]) {
+					case 'A5':
+						a5Value = Number(values[1]);
+						break;
+					case 'A20':
+						a20Value = Number(values[1]);
+						break;
+					case 'A15':
+						a15Value = Number(values[1]);
+						break;
+					case 'A7':
+						a7Value = Number(values[1]);
+						break;
+					case 'A13':
+						a13Value = Number(values[1]);
+						break;
+					case 'A12':
+						a12Value = Number(values[1]);
+						break;
+					default:
+						// do nothing for other rows
+						break;
+				}
+			}
+            const alphaValue = a20Value + a5Value;
+            const betaValue = a15Value / a7Value;
+            const charlieValue = a13Value * a12Value;
+
+			let alphaCell = document.getElementById('alpha');
+			let betaCell = document.getElementById('beta');
+			let charlieCell = document.getElementById('charlie');
+            alphaCell.textContent = alphaValue;
+            betaCell.textContent = betaValue;
+            charlieCell.textContent = charlieValue;
+
+        }
 	reader.readAsText(file);
-	}
 
-	</script>
+    }
+    </script>
+	<br></br>
+    <table id="table2">
+        <thead>
+        <tr>
+            <th>Category</th>
+            <th>Value</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Alpha</td>
+            <td id="alpha"></td>
+        </tr>
+        <tr>
+            <td>Beta</td>
+            <td id="beta"></td>
+        </tr>
+        <tr>
+            <td>Charlie</td>
+            <td id="charlie"></td>
+        </tr>
+        </tbody>
+    </table>
 
-	<br><br>
-    <table border="1" style="width: 50%; text-align: center;">
-		<tr>
-			<th style="text-align: center;">Category</th>
-			<th style="text-align: center;">Value</th>
-		</tr>
-		<tr>
-			<td>Alpha</td>
-			<td>A5 + A20</td>
-		</tr>
-		<tr>
-			<td>Beta</td>
-			<td>A15 / A7</td>
-		</tr>
-		<tr>
-			<td>Charlie</td>
-			<td>A13 * A12</td>
-		</tr>
-	</table>
 </body>
-</html>
